@@ -4,12 +4,12 @@
 def StockTableMaker(code, market= 'SS', csv = 'stock.csv',a='0',b='0',c='0',d='0',e='0',f='0',g='d'):
     from urllib.request import urlretrieve
     url = 'http://ichart.yahoo.com/table.csv?s=%s.%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s&g=%s'
-    url = url%(code, market, a, b, c, d, e, f, g)
     try:
-        urlretrieve(url, csv)
+        urlretrieve(url%(code, market, a, b, c, d, e, f, g), csv)
     except:
         return False
     return True
+
 
 def StockDataReader(csv='stock.csv'):
     from  csv import reader
