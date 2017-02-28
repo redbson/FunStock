@@ -1,33 +1,37 @@
 # coding: utf-8
 
+import urllib.request
+import csv
+import os
 
-def StockTableMaker(code, market= 'SS', csv = 'stock.csv',a='0',b='0',c='0',d='0',e='0',f='0',g='d'):
-    from urllib.request import urlretrieve
+
+def StockTableMaker( code, market= 'SS', csv = 'stock.csv',a='0',b='0',c='0',d='0',e='0',f='0',g='d'):
     url = 'http://ichart.yahoo.com/table.csv?s=%s.%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s&g=%s'
     try:
-        urlretrieve(url%(code, market, a, b, c, d, e, f, g), csv)
+        urllib.request.urlretrieve(url%( code, market, a, b, c, d, e, f, g), csv)
     except:
         return False
     return True
 
 
-def StockDataReader(csv='stock.csv'):
-    from  csv import reader
-    with open('stock.csv', 'r') as f:
-        reader = reader(f)
-        return [ line for line in reader ]
+def StockDataReader( data = 'stock.csv'):
+    try:
+        with open( data, 'r') as f:
+            reader = csv.reader(f)
+            return [ line for line in reader ]
+    except:
+        return ['error']
 
 
 def StockHistoricalData( code):
-    from  os import  remove
     try:
-        StockTableMaker(code)
+        StockTableMaker( code)
         return  StockDataReader()[1:]
     finally:
-        remove('stock.csv')
+        os.remove( 'stock.csv')
 
 
-def StockLastData(code):
+def StockLastData( code):
     '''
     1：”27.55″，今日开盘价；
     2：”27.25″，昨日收盘价；
@@ -56,13 +60,13 @@ def StockLastData(code):
     '''
     import urllib.request
     url = 'http://hq.sinajs.cn/list=sh%s'
-    request =  urllib.request.urlopen(url%(code)).read()
-    return request.decode('UTF-8','ignore').split(',')[1:]
+    request =  urllib.request.urlopen(url%( code)).read()
+    return request.decode( 'UTF-8','ignore').split( ',')[1:]
 
 
 if __name__ == '__main__':
     code = '600000'
-    print(StockHistoricalData(code))
+    print(StockHistoricalData( code))
 
 
 
