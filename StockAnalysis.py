@@ -1,22 +1,30 @@
 # coding: utf-8
 
 
-def StockTable(code, market= 'SS', csv = 'stock.csv',a='0',b='0',c='0',d='0',e='0',f='0',g='d'):
-    import urllib.request
+def StockTableMaker(code, market= 'SS', csv = 'stock.csv',a='0',b='0',c='0',d='0',e='0',f='0',g='d'):
+    from urllib.request import urlretrieve
     url = 'http://ichart.yahoo.com/table.csv?s=%s.%s&a=%s&b=%s&c=%s&d=%s&e=%s&f=%s&g=%s'
     url = url%(code, market, a, b, c, d, e, f, g)
     try:
-        urllib.request.urlretrieve(url, csv)
+        urlretrieve(url, csv)
     except:
         return False
     return True
 
-
-def StockData(csv='stock.csv'):
-    import csv
+def StockDataReader(csv='stock.csv'):
+    from  csv import reader
     with open('stock.csv', 'r') as f:
-        reader = csv.reader(f)
+        reader = reader(f)
         return [ line for line in reader ]
+
+
+def StockHistoricalData( code):
+    from  os import  remove
+    try:
+        StockTableMaker(code)
+        return  StockDataReader()[1:]
+    finally:
+        remove('stock.csv')
 
 
 def StockLastData(code):
@@ -54,7 +62,7 @@ def StockLastData(code):
 
 if __name__ == '__main__':
     code = '600000'
-    print(StockLastData(code))
+    print(StockHistoricalData(code))
 
 
 
